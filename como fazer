@@ -177,6 +177,13 @@ Editar
 </body>
 </html>
 
+🔥 O que esse CSS faz?
+✅ Design moderno: Fundo com gradiente azul, formulário com sombra suave.
+✅ Inputs elegantes: Bordas arredondadas, efeito de foco com brilho azul.
+✅ Botão estilizado: Cor azul vibrante e efeito de hover.
+✅ Animação suave: Formulário aparece com efeito "fade-in".
+✅ Responsivo: Adapta bem a diferentes tamanhos de tela.
+
 
 3️⃣ Criar o arquivo script.js
 No VS Code, dentro da pasta frontend, crie script.js e cole:
