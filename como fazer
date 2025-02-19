@@ -1,0 +1,240 @@
+📌 Estrutura do projeto
+
+Teremos:
+✅ Frontend (HTML, CSS, JS) → Criará o formulário e enviará os dados para o backend.
+✅ Backend (Node.js + Express) → Receberá os dados e os salvará no PostgreSQL.
+✅ Banco de Dados (PostgreSQL) → Armazenará os dados.
+
+
+🚀 Passo 1: Configurar o PostgreSQL no pgAdmin
+1️⃣ Abra o pgAdmin
+2️⃣ Crie um banco de dados chamado cadastro
+3️⃣ Crie uma tabela users rodando este comando no Query Tool:
+
+sql
+Copiar
+Editar
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    birthdate DATE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+
+🚀 Passo 2: Criar o Backend com Node.js e Express
+Agora, no VS Code, siga os passos abaixo:
+
+1️⃣ Criar a pasta do projeto
+Abra o terminal no VS Code (Ctrl + ' ) e rode:
+
+sh
+Copiar
+mkdir meu-projeto && cd meu-projeto
+
+
+2️⃣ Criar a pasta do backend
+sh
+Copiar
+Editar
+mkdir backend && cd backend
+
+
+3️⃣ Inicializar o Node.js e instalar dependências
+sh
+Copiar
+Editar
+npm init -y
+npm install express pg cors body-parser dotenv
+
+
+4️⃣ Criar o arquivo server.js
+No VS Code, dentro da pasta backend, crie um arquivo server.js e cole este código:
+
+javascript
+Copiar
+Editar
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { Pool } = require('pg');
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+const pool = new Pool({
+  user: 'postgres',  // Altere para seu usuário do PostgreSQL
+  host: 'localhost',
+  database: 'cadastro', // Nome do banco de dados
+  password: 'sua_senha', // Altere para sua senha do PostgreSQL
+  port: 5432
+});
+
+app.post('/users', async (req, res) => {
+  const { name, cpf, birthdate, email } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO users (name, cpf, birthdate, email) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, cpf, birthdate, email]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.listen(3000, () => console.log('✅ Servidor rodando na porta 3000'));
+
+
+5️⃣ Criar um arquivo .env para armazenar credenciais
+No backend, crie um arquivo .env e adicione:
+
+ini
+Copiar
+Editar
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+DB_NAME=cadastro
+DB_HOST=localhost
+DB_PORT=5432
+
+
+6️⃣ Rodar o backend
+sh
+Copiar
+Editar
+node server.js
+Se estiver tudo certo, verá:
+
+yaml
+Copiar
+Editar
+✅ Servidor rodando na porta 3000
+
+
+
+🚀 Passo 3: Criar o Frontend (HTML + JavaScript)
+Agora, vamos criar o formulário para enviar os dados para o backend.
+
+1️⃣ Criar a pasta do frontend
+sh
+Copiar
+Editar
+cd ..
+mkdir frontend && cd frontend
+
+
+2️⃣ Criar o arquivo index.html
+No VS Code, dentro da pasta frontend, crie index.html e cole:
+
+html
+Copiar
+Editar
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 400px; margin: auto; }
+        .form-group { margin-bottom: 10px; text-align: left; }
+        label { display: block; }
+        input { width: 100%; padding: 8px; }
+        button { padding: 10px; background: green; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro</h1>
+        <form id="userForm">
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" required>
+            </div>
+            <div class="form-group">
+                <label for="birthdate">Data de Nascimento:</label>
+                <input type="date" id="birthdate" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" required>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+3️⃣ Criar o arquivo script.js
+No VS Code, dentro da pasta frontend, crie script.js e cole:
+
+javascript
+Copiar
+Editar
+document.getElementById("userForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const userData = {
+        name: document.getElementById("name").value,
+        cpf: document.getElementById("cpf").value,
+        birthdate: document.getElementById("birthdate").value,
+        email: document.getElementById("email").value
+    };
+
+    try {
+        const response = await fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+        document.getElementById("message").textContent = "Cadastro realizado com sucesso!";
+    } catch (error) {
+        document.getElementById("message").textContent = "Erro ao cadastrar!";
+    }
+});
+
+
+🚀 Passo 4: Rodar Tudo!
+Agora, execute os dois serviços:
+
+🔹 Iniciar o Backend
+sh
+Copiar
+Editar
+cd backend
+node server.js
+
+
+🔹 Iniciar o Frontend
+1️⃣ crie outro terminal
+Ctrl + j
+
+
+2️⃣ Abra o index.html no navegador.
+
+✅ Teste o formulário
+Abra index.html no navegador
+Preencha os dados
+Clique em "Cadastrar"
+Os dados serão enviados para o PostgreSQL!
+Se quiser verificar no banco, rode no pgAdmin:
+
+sql
+Copiar
+Editar
+SELECT * FROM users;
