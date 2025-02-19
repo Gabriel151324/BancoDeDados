@@ -238,3 +238,104 @@ sql
 Copiar
 Editar
 SELECT * FROM users;
+
+
+
+COMO CRIAR A TABELA NO pgAdmin
+
+✅ Passo 1: Abrir o pgAdmin
+
+1️⃣ Abra o pgAdmin 4
+
+No Windows, pressione Win + S, digite pgAdmin e abra o aplicativo.
+No Linux, use o terminal e rode:
+sh
+Copiar
+Editar
+pgadmin4
+
+2️⃣ Conecte-se ao servidor PostgreSQL
+
+No painel esquerdo, clique duas vezes no "PostgreSQL 14" (ou sua versão instalada).
+Se pedir senha, digite a senha que você escolheu ao instalar o PostgreSQL.
+
+
+✅ Passo 2: Criar o Banco de Dados cadastro
+
+1️⃣ No painel esquerdo, clique com o botão direito em "Databases" → "Create" → "Database"
+
+2️⃣ No campo "Database name", digite:
+
+cadastro
+
+3️⃣ Clique em "Save"
+
+O banco de dados cadastro aparecerá na lista.
+
+
+✅ Passo 3: Criar a Tabela users
+Agora, vamos criar a tabela dentro do banco cadastro.
+
+1️⃣ Clique duas vezes no banco de dados cadastro
+
+2️⃣ No menu superior, clique em "Tools" → "Query Tool"
+
+3️⃣ No editor que abrir, cole este código SQL:
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    birthdate DATE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+4️⃣ Clique no botão "Execute" (ícone ▶️ verde)
+
+Isso criará a tabela users dentro do banco cadastro.
+
+
+✅ Passo 4: Verificar se a tabela foi criada
+
+1️⃣ No painel esquerdo, clique em "cadastro" > "Schemas" > "public" > "Tables"
+
+2️⃣ Você verá a tabela users.
+
+3️⃣ Para visualizar os dados cadastrados, volte ao Query Tool e rode:
+
+SELECT * FROM users;
+
+
+COMO RODAR O BACKEND E O FRONTEND NO TERMINAL
+
+✅ Passo 1: Abrir o projeto no VS Code
+1️⃣ Abra o VS Code
+
+2️⃣ No terminal do VS Code (Ctrl + '), entre na pasta do projeto:
+cd C:\GabrielDS2\meu-projeto
+
+✅ Passo 2: Iniciar o Backend (Servidor Node.js)
+Agora, vamos rodar o servidor backend, que se conecta ao PostgreSQL.
+
+1️⃣ No terminal, entre na pasta do backend:
+cd backend
+
+2️⃣ Rodar o servidor com:
+node server.js
+
+3️⃣ Se estiver tudo certo, verá esta mensagem:
+✅ Servidor rodando na porta 3000
+
+4️⃣ Se der erro, verifique se o PostgreSQL está rodando corretamente.
+
+Abrir um novo terminal no VS Code
+1️⃣ No VS Code, clique em Terminal > Novo Terminal
+
+2️⃣ Um novo terminal será aberto abaixo.
+
+3️⃣ Agora você pode rodar os comandos do frontend sem parar o backend!
+🔹 No novo terminal, vá para a pasta do frontend:
+cd frontend
+
+🔹 Abra o formulário no navegador:
+start index.html  # Windows
